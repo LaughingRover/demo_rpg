@@ -4,9 +4,20 @@
 class Cleric : public Character
 {
 public:
-	static const hptype HPGrowth = 14u;
-	static const stattype BaseStr = 2u;
-	static const stattype BaseInt = 2u;
+	Cleric() : Character(BASEHP, BASESTR, BASEINT) {}
 
-	Cleric() : Character(HPGrowth, BaseStr, BaseInt) {}
+private:
+	void LevelUp() override
+	{
+		setMaxHP(getMaxHP() + HPGROWTH);
+		increaseStats(STRGROWTH, INTGROWTH);
+	}
+
+	static const hptype BASEHP = 14u;
+	static const stattype BASESTR = 2u;
+	static const stattype BASEINT = 3u;
+
+	static const hptype HPGROWTH = 7u;
+	static const stattype STRGROWTH = 1u;
+	static const stattype INTGROWTH = 2u;
 };

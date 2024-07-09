@@ -1,5 +1,7 @@
 #pragma once
-#include "Typedef.h"
+#include <cstdint>
+
+typedef std::uint16_t hptype;
 
 class HP {
 public:

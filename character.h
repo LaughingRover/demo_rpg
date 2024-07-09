@@ -3,12 +3,9 @@
 #include "statblock.h"
 #include "levelsystem.h"
 
-class Character : public HP, public StatBlock
+class Character : public HP, public StatBlock, public LevelSystem
 {
 public:
 	Character(hptype hpGrowth, stattype baseStr, stattype baseInt)
-		: HP(hpGrowth, hpGrowth), StatBlock(baseStr, baseInt) {}
-
-protected:
-	LevelSystem levelUp;
+		: HP(hpGrowth, hpGrowth), StatBlock(baseStr, baseInt), LevelSystem() {}
 };

@@ -4,9 +4,20 @@
 class Wizard : public Character
 {
 public:
-	static const hptype HPGrowth = 9u;
-	static const stattype BaseStr = 1u;
-	static const stattype BaseInt = 4u;
+	Wizard() : Character(BASEHP, BASESTR, BASEINT) {}
 
-	Wizard() : Character(HPGrowth, BaseStr, BaseInt) {}
+private:
+	void LevelUp() override
+	{
+		setMaxHP(getMaxHP() + HPGROWTH);
+		increaseStats(STRGROWTH, INTGROWTH);
+	}
+
+	static const hptype BASEHP = 10u;
+	static const stattype BASESTR = 1u;
+	static const stattype BASEINT = 4u;
+
+	static const hptype HPGROWTH = 5u;
+	static const stattype STRGROWTH = 1u;
+	static const stattype INTGROWTH = 2u;
 };
