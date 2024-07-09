@@ -1,26 +1,26 @@
 #pragma once
-#include "hitpointtypes.h"
+#include "Typedef.h"
 
-class hp {
+class HP {
 public:
 	bool setMaxHP(hptype new_max_hp) {
 		if (new_max_hp < 1)
 			return false;
 
-		MaxHP = new_max_hp
+		MaxHP = new_max_hp;
 
 		if (CurrentHP > MaxHP)
 			CurrentHP = MaxHP;
 
 		return true;
 	}
-	
-	void getCurrentHP() {
+
+	hptype getCurrentHP() const {
 		return CurrentHP;
 	}
-	
-	void getMaxHP() {
-		return MaxHP
+
+	hptype getMaxHP() const {
+		return MaxHP;
 	}
 
 	void takeDamage(hptype damage) {
@@ -29,20 +29,27 @@ public:
 			CurrentHP = 0;
 			return;
 		}
-		
+
 		CurrentHP -= damage;
 	}
-	
+
 	void heal(hptype amount) {
 		if (amount + CurrentHP > MaxHP)
 		{
-			CurrentHP = MaxHP
+			CurrentHP = MaxHP;
 			return;
 		}
-		
+
 		CurrentHP += amount;
 	}
-	
+
+	HP() : CurrentHP (1), MaxHP(1) {}
+
+	HP(hptype cHP, hptype mHP) : CurrentHP(cHP), MaxHP(mHP) {
+		if (CurrentHP > MaxHP)
+			CurrentHP = MaxHP;
+	}
+
 private:
 	hptype CurrentHP;
 	hptype MaxHP;

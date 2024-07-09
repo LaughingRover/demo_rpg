@@ -7,10 +7,10 @@ quick list to get started
 
 ### classes
 
-- warrior: highest hit point
-- wizard: uses magic
-- cleric: uses support magic
-- rogue: highest consistent melee/ranged damage
+- warrior: HP Growth 19: highest hit point
+- wizard: HP Growth 9: uses magic
+- cleric: HP Growth 14: uses support magic
+- rogue: HP Growth 13: highest consistent melee/ranged damage
 
 ### leveling system
 
