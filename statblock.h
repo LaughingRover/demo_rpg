@@ -13,7 +13,8 @@ public:
 	stattype getIntellect() const { return intellect; }
 
 protected:
-	void increaseStats(stattype s, stattype i) {
+	void increaseStats(stattype s, stattype i)
+	{
 		strength += s;
 		intellect += i;
 	}
