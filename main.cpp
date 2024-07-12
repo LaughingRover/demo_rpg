@@ -14,6 +14,9 @@ int main()
 			<< " -HP: " << p1.getCurrentHP() << '/' << p1.getMaxHP() << '\n'
 			<< " -Strength: " << p1.getStrength() << '\n'
 			<< " -Intellect: " << p1.getIntellect() << '\n'
+			<< " -Agility: " << p1.getAgility() << '\n'
+			<< " -Armor: " << p1.getArmor() << '\n'
+			<< " -Element Resistance: " << p1.getElementResistance() << '\n'
 			<< std::endl;
 		if (i < 1)
 			p1.gainEXP(100u);

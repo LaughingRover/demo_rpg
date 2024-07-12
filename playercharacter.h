@@ -13,19 +13,11 @@ class PlayerCharacterDelegate : public StatBlock
 public:
 	static const exptype NEXTLEVELAT = 100u;
 
-	PlayerCharacterDelegate(welltype baseHP, stattype baseSTR, stattype baseINT) : StatBlock(0u, 0u),
-																				   CurrentLevel(1u),
-																				   CurrentExp(0u),
-																				   EXPToNextLevel(NEXTLEVELAT),
-																				   BASEHP(baseHP),
-																				   BASESTR(baseSTR),
-																				   BASEINT(baseINT),
-																				   HP(std::make_unique<PointWell>())
-	{
-		HP->setMax(BASEHP);
-		HP->increaseCurrent(BASEHP);
-		increaseStats(BASESTR, BASEINT);
-	}
+	PlayerCharacterDelegate() : StatBlock(0u, 0u),
+								CurrentLevel(1u),
+								CurrentExp(0u),
+								EXPToNextLevel(NEXTLEVELAT),
+								HP(std::make_unique<PointWell>()) {}
 
 	void gainExp(exptype gainedExp)
 	{
@@ -39,6 +31,7 @@ public:
 	exptype getCurrentExp() { return CurrentExp; }
 	exptype getExpToNextLevel() { return EXPToNextLevel; }
 
+	virtual void levelUp() = 0;
 	virtual std::string getClassName() = 0;
 
 	std::unique_ptr<PointWell> HP;
@@ -47,10 +40,6 @@ protected:
 	leveltype CurrentLevel;
 	exptype CurrentExp;
 	exptype EXPToNextLevel;
-
-	welltype BASEHP;
-	stattype BASESTR;
-	stattype BASEINT;
 
 	bool check_if_leveled()
 	{
@@ -62,14 +51,6 @@ protected:
 		levelUp();
 		EXPToNextLevel *= LEVELSCALER;
 		return true;
-	}
-
-	void levelUp()
-	{
-		HP->setMax((welltype)(BASEHP / 2.f) + HP->getMax());
-		HP->increaseCurrent((welltype)(BASEHP / 2.f));
-		increaseStats((stattype)((BASESTR + 1u) / 2.f),
-					  (stattype)((BASEINT + 1u) / 2.f));
 	}
 };
 
@@ -93,6 +74,9 @@ public:
 	exptype getExpToNextLevel() { return pcclass->getExpToNextLevel(); }
 	stattype getStrength() { return pcclass->getStrength(); }
 	stattype getIntellect() { return pcclass->getIntellect(); }
+	stattype getAgility() { return pcclass->getAgility(); }
+	stattype getArmor() { return pcclass->getArmor(); }
+	stattype getElementResistance() { return pcclass->getElementResistance(); }
 	welltype getCurrentHP() { return pcclass->HP->getCurrent(); }
 	welltype getMaxHP() { return pcclass->HP->getMax(); }
 	std::string getClassName() { return pcclass->getClassName(); }
@@ -102,50 +86,80 @@ public:
 	void heal(welltype amt) { pcclass->HP->increaseCurrent(amt); }
 };
 
+#define PCCONSTRUCT                               \
+	PlayerCharacterDelegate()                     \
+	{                                             \
+		HP->setMax(BASEHP);                       \
+		HP->increaseCurrent(BASEHP);              \
+		increaseStats(BASESTR, BASEINT, BASEAGI); \
+	}
+
+#define LEVELUP                                              \
+	void levelUp()                                           \
+	{                                                        \
+		HP->setMax((welltype)(BASEHP / 2.f) + HP->getMax()); \
+		HP->increaseCurrent((welltype)(BASEHP / 2.f));       \
+		increaseStats((stattype)((BASESTR + 1u) / 2.f),      \
+					  (stattype)((BASEINT + 1u) / 2.f),      \
+					  (stattype)((BASEAGI + 1u) / 2.f));     \
+	}
+
 class Cleric : public PlayerCharacterDelegate
 {
 public:
 	static const welltype BASEHP = 14u;
-	static const stattype BASESTR = 2u;
-	static const stattype BASEINT = 3u;
-
-	Cleric() : PlayerCharacterDelegate(BASEHP, BASESTR, BASEINT) {}
+	static const stattype BASESTR = 3u;
+	static const stattype BASEINT = 5u;
+	static const stattype BASEAGI = 1u;
 
 	std::string getClassName() override { return std::string("cleric"); }
+
+	LEVELUP
+
+	Cleric() : PCCONSTRUCT
 };
 
 class Rogue : public PlayerCharacterDelegate
 {
 public:
-	static const welltype BASEHP = 12u;
-	static const stattype BASESTR = 3u;
-	static const stattype BASEINT = 2u;
-
-	Rogue() : PlayerCharacterDelegate(BASEHP, BASESTR, BASEINT) {}
+	static const welltype BASEHP = 10u;
+	static const stattype BASESTR = 1u;
+	static const stattype BASEINT = 8u;
+	static const stattype BASEAGI = 1u;
 
 	std::string getClassName() override { return std::string("Rogue"); }
+
+	LEVELUP
+
+	Rogue() : PCCONSTRUCT
 };
 
 class Warrior : public PlayerCharacterDelegate
 {
 public:
 	static const welltype BASEHP = 18u;
-	static const stattype BASESTR = 4u;
-	static const stattype BASEINT = 1u;
-
-	Warrior() : PlayerCharacterDelegate(BASEHP, BASESTR, BASEINT) {}
+	static const stattype BASESTR = 5u;
+	static const stattype BASEINT = 2u;
+	static const stattype BASEAGI = 2u;
 
 	std::string getClassName() override { return std::string("Warrior"); }
+
+	LEVELUP
+
+	Warrior() : PCCONSTRUCT
 };
 
 class Wizard : public PlayerCharacterDelegate
 {
 public:
-	static const welltype BASEHP = 10u;
-	static const stattype BASESTR = 1u;
-	static const stattype BASEINT = 4u;
-
-	Wizard() : PlayerCharacterDelegate(BASEHP, BASESTR, BASEINT) {}
+	static const welltype BASEHP = 12u;
+	static const stattype BASESTR = 3u;
+	static const stattype BASEINT = 3u;
+	static const stattype BASEAGI = 5u;
 
 	std::string getClassName() override { return std::string("Wizard"); }
+
+	LEVELUP
+
+	Wizard() : PCCONSTRUCT
 };
